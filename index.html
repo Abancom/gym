@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RichmanFC Receipt</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { background:#fff; }
+    .receipt-wrap { max-width:900px; margin:40px auto; position:relative; }
+    .card { position:relative; z-index:2; background:rgba(255,255,255,0.95); box-shadow:0 8px 24px rgba(0,0,0,0.06); }
+
+    /* Large grey watermark */
+    .watermark-bg {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%) rotate(-25deg);
+      font-size:180px;
+      font-weight:900;
+      color:#6c757d;
+      opacity:0.06;
+      white-space:nowrap;
+      z-index:1;
+      user-select:none;
+      pointer-events:none;
+    }
+
+    .brand-badge { width:64px; height:64px; border-radius:16px; border:1px solid #dee2e6; display:flex; align-items:center; justify-content:center; }
+    .brand-badge i { font-size:32px; }
+  </style>
+</head>
+<body>
+  <div class="container receipt-wrap">
+    <div class="watermark-bg">RICHMANFC</div>
+
+    <div class="card p-4">
+      <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center gap-3">
+          <div class="brand-badge bg-white">
+            <i class="bi bi-exclude"></i>
+          </div>
+          <div>
+            <h4 class="mb-1">RICHMAN FITNESS CLUB</h4>
+            <div class="small text-muted">Paragon City, Lahore</div>
+          </div>
+        </div>
+        <div class="border rounded p-2 text-nowrap">
+          <div class="fw-semibold">Invoice</div>
+          <div class="small">Account # <span class="fw-semibold">7390</span></div>
+          <div class="small">Date: <span class="fw-semibold">2025-October</span></div>
+        </div>
+      </div>
+
+      <hr/>
+      <table class="table mb-0">
+        <thead>
+          <tr><th>Particulars</th><th class="text-end">Unit Price</th><th class="text-center">Qty</th><th class="text-end">Charges</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Club Subscription — Units: 1</td><td class="text-end">PKR 5,500.00</td><td class="text-center">1</td><td class="text-end">PKR 5,500.00</td></tr>
+          <tr><td>Coach Fee — Units: 1</td><td class="text-end">PKR 2,000.00</td><td class="text-center">1</td><td class="text-end">PKR 2,000.00</td></tr>
+          <tr><td>Discount / Adjustment</td><td class="text-end">—</td><td class="text-center">—</td><td class="text-end">PKR -0,000.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="d-flex justify-content-end mt-3">
+        <div class="text-end">
+          <div class="fw-semibold">Total</div>
+          <div class="display-6 fw-bold">PKR 7,500.00</div>
+        </div>
+      </div>
+
+      <p class="mt-3 small text-muted">Thanks for training with us. Please contact reception for queries.</p>
+      <p class="fst-italic small text-muted">Appreciate your patronage at Richman Fitness Club — Paragon City, Lahore</p>
+      <p class="text-center fw-semibold small mt-3">This receipt is computer generated — no signature required.</p>
+    </div>
+    <div class="text-end mt-3">
+      <button id="downloadBtn" class="btn btn-dark"><i class="bi bi-download me-1"></i> Download PDF</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script>
+    (function(){
+      const { jsPDF } = window.jspdf;
+      document.getElementById('downloadBtn').addEventListener('click', async () => {
+        const card = document.querySelector('.card');
+        const canvas = await html2canvas(card, {scale:2, useCORS:true});
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p','pt','a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const margin = 20;
+        const imgWidth = pageWidth - margin*2;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        pdf.addImage(imgData,'PNG',margin,margin,imgWidth,imgHeight);
+        pdf.save('RichmanFC-Receipt.pdf');
+      });
+    })();
+  </script>
+</body>
+</html>
